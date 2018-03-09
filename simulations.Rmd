@@ -1,0 +1,28 @@
+
+## Generating Table 2 in the paper
+
+This code reproduces the results of Table 2 in the paper. We 
+have set the number of replicates to 10 only, so the confidence
+intervals will be wider. For the data displayed in the paper, we 
+used 100,000 replicates.
+
+```{r echo=FALSE}
+library(knitr)
+source("simulations.R")
+medianCoeffs <- function(x){
+	options(scipen=100)
+	lo <- t(signif(x[grep("2.5%", rownames(x)),],3))
+	hi <- t(signif(x[grep("97.5%", rownames(x)),],3))
+	m <- t(signif(x[grep("50%", rownames(x)),],3))
+
+	xx <- matrix( paste0(m," (",lo,",",hi,")"), nrow=3 )
+
+	#x <- t(x)
+	colnames(xx) <- gsub("-.*$","",colnames(m))
+	rownames(xx) <- c("Change Score","Follow-Up Unadjusted","Follow-Up Adjusted")
+	xx
+}
+```
+```{r}
+kable(medianCoeffs(Summ))
+```
